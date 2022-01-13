@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<script src="../static/echarts.min.js"></script>
+<script src="../static/jquery.min.js"></script>
+</head>
+<body style="background: rgba(251,241,224,0.57)">
+<h1 align="center" style="font-size:24px">电商平台实时监控系统</h1>
+<h2 style="position: absolute; top: 5px; font-size:15px">cxt</h2>
+<div>
+    <div id = "line" style="background: rgba(255,217,184,0.18);position: absolute; width: 570px; height: 400px; top: 55px;
+    border-radius: 16px; border-color: rgba(255,217,184,0.41);"></div>
+    <div id = "bar" style="background: rgba(255,217,184,0.18); position: absolute; width: 500px; height: 400px; bottom: 5px; border-radius: 16px"></div>
+    <div id = "map" style="background: rgba(255,217,184,0.18); position: absolute; width: 650px; height: 450px; left: 610px; top: 55px; border-radius: 16px"></div>
+    <div id = "bar2" style="background: rgba(255,217,184,0.18); position: absolute; width: 750px; height: 350px; left: 530px; bottom: 5px; border-radius: 16px"></div>
+    <div id = "pie" style="background: rgba(255,217,184,0.18); position: absolute; width: 590px; height: 350px; right: 15px; top: 55px; border-radius: 16px"></div>
+    <div id = "gauge" style="background: rgba(255,217,184,0.18); position: absolute; width: 580px; height: 460px; right: 15px; bottom: 5px; border-radius: 16px"></div>
+</div>
+    <script>
+        var line_chart = echarts.init(document.getElementById('line'))
+        var bar_chart = echarts.init(document.getElementById('bar'))
+        var bar_chart2 = echarts.init(document.getElementById('bar2'))
+        var pie_chart = echarts.init(document.getElementById('pie'))
+        var gauge_chart = echarts.init(document.getElementById('gauge'))
+
+        {# line图参数 #}
+        var date = {{ month | tojson }}
+        {#const colors = ['#5470C6', '#EE6666','#d88273','#e01f54'];#}
+        option_line = {
+          title: [
+            {
+              text: '地区销量趋势',
+                left: 'center'
+            }
+          ],
+          {#color: colors,#}
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+              top: 35
+          },
+          grid: {
+            top: 70,
+            bottom: 50,
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              axisTick: {
+                alignWithLabel: true
+              },
+              axisLine: {
+                onZero: false,
+                lineStyle: {
+                  {#color: colors[1]#}
+                }
+              },
+              // prettier-ignore
+              data: {{ month | tojson}}
+            },
+            {
+              type: 'category',
+              axisTick: {
+                alignWithLabel: true
+              },
+              axisLine: {
+                onZero: false,
+                lineStyle: {
+                }
+              },
+              // prettier-ignore
+              data: {{ month | tojson }}
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              axisLabel: {
+                formatter: '{value} W'
+              },
+            }
+          ],
+          series: [
+            {
+              name: 'Guangzhou',
+              type: 'line',
+              xAxisIndex: 1,
+              smooth: true,
+              emphasis: {
+                focus: 'series'
+              },
+              data: {{ GZ | tojson }}
+            },
+            {
+              name: 'Chengdu',
+              type: 'line',
+              smooth: true,
+              emphasis: {
+                focus: 'series'
+              },
+              data: {{ CD | tojson }}
+            },
+            {
+              name: 'Shanghai',
+              type: 'line',
+              smooth: true,
+              emphasis: {
+                focus: 'series'
+              },
+              data: {{ SH | tojson }}
+        },
+            {
+              name: 'Beijing',
+              type: 'line',
+              smooth: true,
+              emphasis: {
+                focus: 'series'
+              },
+              data: {{ BJ | tojson }}
+        },
+          ]
+        };
+        line_chart.setOption(option_line);
+
+        {# bar图参数 #}
+        var xDataArr = {{ shopname | tojson }}
+        var yDataArr = {{ commodity | tojson }}
+        option_bar = {
+          dataZoom: [ // 控制区域缩放效果的实现
+            {
+              type: 'slider', // 缩放的类型  slide代表滑块  inside代表依靠鼠标滚轮
+              // type: 'inside'
+              yAxisIndex: 0
+            },
+            {
+              type: 'slider',
+              xAxisIndex: 0,
+              start: 0, // 渲染完成后, 数据筛选的初始值, 百分比
+              end: 80 // 渲染完成后, 数据筛选的结束值, 百分比
+            }
+          ],
+          title: [
+            {
+              text: '商家销售统计',
+              left: 45
+            }
+          ],
+          {#color: colors,#}
+          toolbox: {
+            feature: {
+              saveAsImage: {},
+              dataZoom: {}
+            }
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            top: 70,
+            bottom: 50,
+            containLabel: true
+          },
+          yAxis: {
+            type: 'category',
+            data: xDataArr
+          },
+          xAxis: {
+            type: 'value'
+          },
+          series: [
+        {
+          name: 'Sale',
+          type: 'bar',
+          markPoint: {
+            data: [
+              {
+                type: 'max', name: '最大值'
+              },{
+                type: 'min', name: '最小值'
+              }
+            ]
+          },
+          label: {
+            position: 'top'
+          },
+          barWidth: '40%',
+          data: yDataArr
+        }
+      ]
+        };
+        bar_chart.setOption(option_bar);
+
+        {# map图参数 #}
+        var avg_gz = {{ (GZ | sum / GZ | count) | int }}
+        var avg_cd = {{ (CD | sum / CD | count) | int }}
+        var avg_bj = {{ (BJ | sum / BJ | count) | int }}
+        var avg_sh = {{ (SH | sum / SH | count) | int }}
+        var scatterData = [
+        [113.23, 23.16, avg_gz],
+        [121.48, 31.22, avg_sh],
+        [116.46, 39.92, avg_bj],
+        [104.06, 30.67, avg_cd]
+      ]
+        $.get('../static/map/china.json', function (chinaJson) {
+        echarts.registerMap('china', chinaJson);
+        var map_chart = echarts.init(document.getElementById('map'), "vintage");
+        var option_map = {
+            title: {
+                textStyle: {
+                    fontSize: 18,
+                    height: 8
+                },
+                text: "商户分布与销量排行",
+                left: 110
+            },
+            tooltip: {},
+            toolbox: {
+              feature: {
+                saveAsImage: {}
+              }
+            },
+            geo: {
+              type: 'map',
+              map: 'china',
+              zoom: 1.2,
+              label: {
+                show: true
+              },
+              tooltip: {
+                show: true
+              },
+              center: [116.507676, 31.752889] // 这个坐标值, 我们是可以通过地图矢量数据获取到的
+            },
+            series: {
+                data: scatterData,
+                geoIndex: 0, // 将空气质量的数据和第0个geo配置关联在一起
+                type: 'effectScatter',
+                coordinateSystem: 'geo',
+                symbolSize: function (params) {
+                    return (params[2] / 100) * 15 + 5;
+                },
+                itemStyle: {
+                    {#color: '#b02a02'#}
+                  },
+                  encode: {
+                    tooltip: 2
+                  },
+            },
+            visualMap: {
+              min: 0,
+              max: 100,
+              inRange: {
+                color: ['white', 'red'] // 控制颜色渐变的范围
+              },
+              calculable: true // 出现滑块
+            }
+          }
+          map_chart.setOption(option_map)
+        });
+
+        {# bar2 图参数 #}
+        var xDataArr1 = {{ district | tojson }}
+        var yDataArr1 = {{ income_dis | tojson }}
+        option_bar2 = {
+        toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          title: [
+             {
+              text: '地区销售排行',
+              left: 45
+             }
+            ],
+          xAxis: {
+            type: 'category',
+            data: xDataArr1,
+            axisLabel: {
+            show: true,
+            interval: '0',}    // 是否显示刻度标签
+          },
+          yAxis: {
+            sortSeriesIndex: 1,
+            realtimeSort: true,
+            type: 'value',
+            name: '销售金额(万)',
+          },
+          series: [
+            {
+              realtimeSort: true,
+              data: yDataArr1,
+              type: 'bar',
+              showBackground: true,
+              label: {
+                show: true,
+                position: 'top',
+                valueAnimation: true
+              },
+              backgroundStyle: {
+                color: 'rgba(180, 180, 180, 0.2)'
+              }
+            }
+          ]
+        };
+        bar_chart2.setOption(option_bar2);
+
+        {# pie图参数 #}
+        option_pie = {
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          title: {
+            text: '热销商品销售金额统计',
+            left: 'center',
+            top: 20,
+          },
+          tooltip: {
+            trigger: 'item'
+          },
+          visualMap: {
+            show: false,
+            min: 1000,
+            max: 200000,
+            inRange: {
+              colorLightness: [0, 1]
+            }
+          },
+          series: [
+            {
+              name: '类目',
+              type: 'pie',
+              radius: '55%',
+              center: ['50%', '50%'],
+              data: [
+                { value: {{ income_item[0] | tojson}}, name: {{ item[0] | tojson}} },
+                { value: {{ income_item[1] | tojson}}, name: {{ item[1] | tojson}} },
+                { value: {{ income_item[2] | tojson}}, name: {{ item[2] | tojson}} },
+                { value: {{ income_item[3] | tojson}}, name: {{ item[3] | tojson}} }
+              ].sort(function (a, b) {
+                return a.value - b.value;
+              }),
+              roseType: 'radius',
+              labelLine: {
+                smooth: 0.2,
+                length: 10,
+                length2: 20
+              },
+              itemStyle: {
+                color: '#c23531',
+                shadowBlur: 200,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              },
+              animationType: 'scale',
+              animationEasing: 'elasticOut',
+              animationDelay: function (idx) {
+                return Math.random() * 200;
+              }
+            }
+          ]
+        };
+        pie_chart.setOption(option_pie);
+
+        {# gauge图参数 #}
+        option_gauge = {
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          title: {
+              text : "库存销售量"
+          },
+           tooltip: {
+            formatter: '{b} : 已售{c}'
+          },
+          series: [
+            {
+              min: 0,
+              max: {{ total_item[0] }},
+              splitNumber: null,
+              name: '女式上衣',
+              type: 'gauge',
+              radius: '40%',
+              center: ['30%', '35%'],
+              progress: {
+                show: true
+              },
+              detail: {
+                valueAnimation: true,
+                formatter: '{value}'
+              },
+              data: [{
+                  value: {{ total_item[0] - rest_item[0] }},
+                  name: '女式上衣'
+                }
+              ],
+              pointer: {
+                length: '75%',
+                width: 8,
+                offsetCenter: [0, '-5%']
+              },
+            },
+
+            {
+              min: 0,
+              max: {{ total_item[1] }},
+              splitNumber: null,
+              name: '外套',
+              type: 'gauge',
+              radius: '45%',
+              center: ['25%', '75%'],
+              progress: {
+                show: true
+              },
+              detail: {
+                valueAnimation: true,
+                formatter: '{value}'
+              },
+              data: [{
+                  value: {{ total_item[1] - rest_item[1] }},
+                  name: '外套'
+                }
+              ],
+              pointer: {
+                length: '75%',
+                width: 8,
+                offsetCenter: [0, '-5%']
+              },
+            },
+
+            {
+              min: 0,
+              max: {{ total_item[2] }},
+              splitNumber: null,
+              name: '裙装',
+              type: 'gauge',
+              radius: '40%',
+              center: ['70%', '35%'],
+              progress: {
+                show: true
+              },
+              detail: {
+                valueAnimation: true,
+                formatter: '{value}'
+              },
+              data: [{
+                  value: {{ total_item[2] - rest_item[2] }},
+                  name: '裙装'
+                }
+              ],
+              pointer: {
+                length: '75%',
+                width: 8,
+                offsetCenter: [0, '-5%']
+              },
+            },
+
+            {
+              min: 0,
+              max: {{ total_item[3] }},
+              splitNumber: null,
+              name: '童装',
+              type: 'gauge',
+              radius: '45%',
+              center: ['75%', '75%'],
+              progress: {
+                show: true
+              },
+              detail: {
+                valueAnimation: true,
+                formatter: '{value}'
+              },
+              data: [{
+                  value: {{ total_item[3] - rest_item[3] }},
+                  name: '童装'
+                }
+              ],
+              pointer: {
+                length: '75%',
+                width: 8,
+                offsetCenter: [0, '-5%']
+              },
+            }
+          ]
+        };
+        gauge_chart.setOption(option_gauge);
+
+    </script>
+</body>
+</html>
