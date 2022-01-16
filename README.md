@@ -7,7 +7,8 @@
 - 开发工具：pycharm
 
 ## 系统页面展示图
-展示视频请点击 [此处](https://www.bilibili.com/video/BV1zu411272Y/)观看
+<b>展示视频请点击 [此处](https://www.bilibili.com/video/BV1zu411272Y/)观看</b>
+
 <img src = "https://github.com/K-m9/real-time_monitoring_System.io/blob/main/%E9%A1%B5%E9%9D%A2%E5%B1%95%E7%A4%BA.png">
 
 ## 代码使用方法
