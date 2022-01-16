@@ -7,6 +7,7 @@
 - 开发工具：pycharm
 
 ## 系统页面展示图
+展示视频请点击 [此处](https://github.com/K-m9/real-time_monitoring_System.io/blob/main/video_%E9%A1%B9%E7%9B%AE%E5%B1%95%E7%A4%BA.mp4)下载观看
 <img src = "https://github.com/K-m9/real-time_monitoring_System.io/blob/main/%E9%A1%B5%E9%9D%A2%E5%B1%95%E7%A4%BA.png">
 
 ## 代码使用方法
