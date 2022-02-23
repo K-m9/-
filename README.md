@@ -2,7 +2,7 @@
 
 ## 项目介绍
 - 项目描述：
-该项目主要为电商相关公司开发的销售数据实时监控系统，主要实现了销售量、销售额和库存关于地区和商品类目的实时数据监控，各模块支持图片导出。该系统采用了python的Flask框架，Mysql数据库，前端html页面负责显示，使用了JavaScript中的echarts可视化库。
+该项目使用了虚拟的电商数据，主要实现了销售量、销售额和库存关于地区和商品类目的实时动态数据监控，各模块支持图片导出。该系统采用了python的Flask框架，Mysql数据库，前端html页面负责显示，使用了JavaScript中的echarts可视化库。
 - 软件环境：python、MySQL、HTML、JavaScript
 - 开发工具：pycharm
 
